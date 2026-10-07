@@ -1,0 +1,8 @@
+{
+  "name": "Remix مِرث | Mirath",
+  "description": "منصة عربية لتوثيق، حفظ، وإحياء الألعاب التقليدية المنسية من حول العالم عبر تجارب رقمية تفاعلية وتراثية.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

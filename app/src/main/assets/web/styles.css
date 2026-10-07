@@ -1,0 +1,1181 @@
+/* ========================================================
+   مِرث | Mirath Web Design System (RTL Arabic Heritage)
+   ======================================================== */
+
+:root {
+  --mirath-terracotta: #C85A32;
+  --mirath-terracotta-dark: #A8421E;
+  --mirath-burnt-orange: #B84D25;
+  --mirath-sandstone: #D4A373;
+  --mirath-gold: #C28B38;
+  --mirath-ivory: #FAF7F0;
+  --mirath-cream: #F4EFE6;
+  --mirath-surface: #EDE6DA;
+  --mirath-dark-brown: #2B1E16;
+  --mirath-muted-brown: #705E53;
+  --mirath-lapis: #1F4E5B;
+  --mirath-lapis-light: #2A697A;
+  --mirath-olive: #5B6A45;
+  --mirath-card-border: #E2D7C5;
+  --mirath-shadow: rgba(43, 30, 22, 0.08);
+  --mirath-shadow-hover: rgba(43, 30, 22, 0.16);
+
+  --font-display: 'Amiri', 'Traditional Arabic', serif;
+  --font-body: 'Cairo', system-ui, -apple-system, sans-serif;
+  --header-height: 120px;
+}
+
+/* Ancient Manuscript Dark Theme (الوضع الليلي التراثي للمخطوطات) */
+[data-theme="dark"], body.dark-mode {
+  --mirath-ivory: #1E1714;
+  --mirath-cream: #28201B;
+  --mirath-surface: #382E28;
+  --mirath-dark-brown: #EFE7DC;
+  --mirath-muted-brown: #A8978A;
+  --mirath-card-border: #42352C;
+  --mirath-shadow: rgba(0, 0, 0, 0.45);
+  --mirath-shadow-hover: rgba(0, 0, 0, 0.7);
+  --mirath-sandstone: #C28B38;
+}
+
+[data-theme="dark"] .mirath-header,
+body.dark-mode .mirath-header {
+  background: #241C17;
+  border-bottom-color: #3D3027;
+}
+
+[data-theme="dark"] .main-nav,
+body.dark-mode .main-nav {
+  background: #1E1714;
+  border-bottom-color: #382E28;
+}
+
+[data-theme="dark"] .mobile-bottom-nav,
+body.dark-mode .mobile-bottom-nav {
+  background: #28201B;
+  border-top-color: #382E28;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--mirath-ivory);
+  color: var(--mirath-dark-brown);
+  direction: rtl;
+  text-align: right;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.6;
+}
+
+/* ========================================================
+   Header & Navigation
+   ======================================================== */
+.mirath-header {
+  background: var(--mirath-cream);
+  border-bottom: 2px solid var(--mirath-card-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 12px var(--mirath-shadow);
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-mark {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--mirath-terracotta), var(--mirath-terracotta-dark));
+  color: #fff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 900;
+  font-family: var(--font-display);
+  box-shadow: 0 3px 8px rgba(200, 90, 50, 0.35);
+}
+
+.brand-text h1 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--mirath-terracotta-dark);
+  line-height: 1.2;
+}
+
+.brand-text .subtitle {
+  font-size: 0.82rem;
+  color: var(--mirath-muted-brown);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-btn {
+  background: var(--mirath-surface);
+  border: 1px solid var(--mirath-card-border);
+  color: var(--mirath-dark-brown);
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.1rem;
+}
+
+.icon-btn:hover {
+  background: var(--mirath-sandstone);
+  color: #fff;
+}
+
+.icon-btn.hidden {
+  display: none;
+}
+
+.chip-toggle {
+  background: rgba(194, 139, 56, 0.15);
+  border: 1px solid var(--mirath-gold);
+  color: var(--mirath-dark-brown);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chip-toggle.active {
+  background: var(--mirath-gold);
+  color: #fff;
+}
+
+.main-nav {
+  background: rgba(237, 230, 218, 0.7);
+  border-top: 1px solid var(--mirath-card-border);
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  padding: 6px 20px;
+  overflow-x: auto;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  color: var(--mirath-dark-brown);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.92rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  background: var(--mirath-surface);
+  color: var(--mirath-terracotta);
+}
+
+.nav-link.active {
+  background: var(--mirath-terracotta);
+  color: #fff;
+}
+
+/* ========================================================
+   App Viewport & Layout
+   ======================================================== */
+.app-viewport {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+}
+
+/* Hero Section */
+.hero-banner {
+  background: linear-gradient(135deg, #FFF9F0, #F4EBE0);
+  border: 1.5px solid var(--mirath-card-border);
+  border-radius: 20px;
+  padding: 36px 30px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px var(--mirath-shadow);
+}
+
+.hero-banner::after {
+  content: "🏛️";
+  font-size: 130px;
+  position: absolute;
+  left: 20px;
+  top: 10px;
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+.hero-tag {
+  display: inline-block;
+  background: var(--mirath-terracotta);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  color: var(--mirath-terracotta-dark);
+  font-weight: 800;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.hero-desc {
+  font-size: 1.05rem;
+  color: var(--mirath-muted-brown);
+  max-width: 720px;
+  margin-bottom: 22px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.btn-primary {
+  background: var(--mirath-terracotta);
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(200, 90, 50, 0.3);
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background: var(--mirath-terracotta-dark);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: var(--mirath-surface);
+  color: var(--mirath-dark-brown);
+  border: 1px solid var(--mirath-card-border);
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  background: var(--mirath-sandstone);
+  color: #fff;
+}
+
+/* Audience Filter Bar */
+.filter-scroll-bar {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 14px;
+  margin-bottom: 24px;
+}
+
+.filter-chip {
+  background: var(--mirath-cream);
+  border: 1px solid var(--mirath-card-border);
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--mirath-dark-brown);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.filter-chip.active {
+  background: var(--mirath-terracotta);
+  color: #fff;
+  border-color: var(--mirath-terracotta);
+}
+
+/* Stats Counter Bar */
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: var(--mirath-cream);
+  border: 1px solid var(--mirath-card-border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.stat-icon {
+  font-size: 2rem;
+}
+
+.stat-num {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--mirath-terracotta);
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--mirath-muted-brown);
+}
+
+/* Games Grid */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--mirath-dark-brown);
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.game-card {
+  background: var(--mirath-cream);
+  border: 1.5px solid var(--mirath-card-border);
+  border-radius: 18px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+  position: relative;
+  box-shadow: 0 4px 14px var(--mirath-shadow);
+  animation: fadeInCard 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+.game-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px var(--mirath-shadow-hover);
+  border-color: var(--mirath-sandstone);
+}
+
+.game-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.game-title-group h3 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--mirath-dark-brown);
+  line-height: 1.3;
+}
+
+.game-title-group .en-title {
+  font-size: 0.85rem;
+  color: var(--mirath-muted-brown);
+  font-family: system-ui, sans-serif;
+  direction: ltr;
+  display: inline-block;
+}
+
+.btn-fav {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: #c9c0b5;
+  transition: color 0.2s ease;
+}
+
+.btn-fav.active {
+  color: #e63946;
+}
+
+.game-meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.meta-badge {
+  background: var(--mirath-surface);
+  color: var(--mirath-dark-brown);
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.meta-badge.culture {
+  background: rgba(31, 78, 91, 0.12);
+  color: var(--mirath-lapis);
+}
+
+.meta-badge.category {
+  background: rgba(200, 90, 50, 0.12);
+  color: var(--mirath-terracotta-dark);
+}
+
+.game-summary {
+  font-size: 0.92rem;
+  color: var(--mirath-muted-brown);
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.researcher-box {
+  background: rgba(194, 139, 56, 0.12);
+  border: 1px dashed var(--mirath-gold);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.8rem;
+  color: var(--mirath-dark-brown);
+  margin-bottom: 14px;
+}
+
+.game-card-footer {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.game-card-footer .btn-primary,
+.game-card-footer .btn-secondary {
+  flex: 1;
+  justify-content: center;
+  padding: 10px 14px;
+  font-size: 0.92rem;
+}
+
+/* ========================================================
+   Interactive Board Engines Styles
+   ======================================================== */
+.game-play-container {
+  background: var(--mirath-cream);
+  border: 2px solid var(--mirath-card-border);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 30px var(--mirath-shadow);
+}
+
+.play-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--mirath-card-border);
+}
+
+.play-modes {
+  display: flex;
+  gap: 8px;
+}
+
+.play-mode-btn {
+  background: var(--mirath-surface);
+  border: 1px solid var(--mirath-card-border);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.play-mode-btn.active {
+  background: var(--mirath-terracotta);
+  color: #fff;
+  border-color: var(--mirath-terracotta);
+}
+
+.play-status-bar {
+  background: var(--mirath-surface);
+  border-radius: 12px;
+  padding: 14px 20px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--mirath-terracotta-dark);
+  margin-bottom: 24px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* 1. Royal Game of Ur Board */
+.ur-board-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.ur-board {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(36px, 60px));
+  grid-template-rows: repeat(3, minmax(36px, 60px));
+  gap: 4px;
+  background: #C49E72;
+  padding: 12px;
+  border-radius: 12px;
+  border: 4px solid #8B5A2B;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.ur-cell {
+  background: #E8D3B9;
+  border: 2px solid #A2703F;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  position: relative;
+  aspect-ratio: 1;
+  user-select: none;
+}
+
+.ur-cell.rosette {
+  background: #F7E4A8;
+  border-color: #C28B38;
+}
+
+.ur-cell.rosette::after {
+  content: "🌸";
+  font-size: 1.3rem;
+  position: absolute;
+  opacity: 0.7;
+}
+
+.ur-cell.empty-gap {
+  background: transparent;
+  border: none;
+}
+
+.ur-piece {
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  z-index: 2;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.ur-piece:hover {
+  transform: scale(1.15);
+}
+
+.ur-piece.p1 {
+  background: radial-gradient(circle, #D8633B, #8F2B0E);
+  border: 2px solid #FFF;
+}
+
+.ur-piece.p2 {
+  background: radial-gradient(circle, #E5C378, #A67C2E);
+  border: 2px solid #4A3319;
+}
+
+.dice-tray {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--mirath-surface);
+  padding: 14px 24px;
+  border-radius: 16px;
+  border: 1px solid var(--mirath-card-border);
+}
+
+.dice-list {
+  display: flex;
+  gap: 8px;
+}
+
+.die-tetra {
+  width: 42px;
+  height: 42px;
+  background: #FFF;
+  border: 2px solid #666;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1.1rem;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+.die-tetra.white-tip {
+  background: var(--mirath-terracotta);
+  color: #fff;
+  border-color: var(--mirath-terracotta-dark);
+}
+
+/* 2. Alquerque Board */
+.alquerque-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.alquerque-board {
+  width: 340px;
+  height: 340px;
+  background: #E8D3B9;
+  border: 4px solid #734522;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.alquerque-grid-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.alquerque-point {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.alquerque-point.highlight {
+  background: rgba(31, 78, 91, 0.4);
+  box-shadow: 0 0 10px #1F4E5B;
+}
+
+.alquerque-piece {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+}
+
+.alquerque-piece.p1 {
+  background: radial-gradient(circle, #D8633B, #8F2B0E);
+  border: 2px solid #FFF;
+}
+
+.alquerque-piece.p2 {
+  background: radial-gradient(circle, #333333, #111111);
+  border: 2px solid #D4A373;
+}
+
+.alquerque-piece.selected {
+  outline: 3px solid #1F4E5B;
+  transform: scale(1.2);
+}
+
+/* 3. Oware Mancala Board */
+.oware-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.oware-board {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #A66A38;
+  padding: 24px;
+  border-radius: 36px;
+  border: 6px solid #6E3F1A;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.mancala-store {
+  width: 70px;
+  height: 160px;
+  background: #5A3314;
+  border-radius: 30px;
+  border: 3px solid #41220A;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #F4EFE6;
+  font-weight: 800;
+  box-shadow: inset 0 6px 12px rgba(0,0,0,0.4);
+}
+
+.mancala-pits-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mancala-row {
+  display: flex;
+  gap: 12px;
+}
+
+.mancala-pit {
+  width: 60px;
+  height: 60px;
+  background: #6E3F1A;
+  border-radius: 50%;
+  border: 3px solid #41220A;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #FFF;
+  font-weight: 900;
+  box-shadow: inset 0 4px 8px rgba(0,0,0,0.4);
+  transition: all 0.2s ease;
+}
+
+.mancala-pit:hover:not(.disabled) {
+  background: #8F5425;
+  transform: scale(1.08);
+}
+
+.mancala-pit.disabled {
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+.seed-counter {
+  font-size: 1.15rem;
+  color: #FFD166;
+}
+
+/* 4. Shisima Board */
+.shisima-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.shisima-board {
+  width: 320px;
+  height: 320px;
+  background: #E8D3B9;
+  border-radius: 50%;
+  border: 4px solid #734522;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.shisima-grid-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.shisima-point {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.shisima-point.center {
+  background: rgba(31, 78, 91, 0.2);
+  border: 2px dashed #1F4E5B;
+}
+
+.shisima-piece {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+}
+
+.shisima-piece.p1 {
+  background: radial-gradient(circle, #D8633B, #8F2B0E);
+  border: 2px solid #FFF;
+}
+
+.shisima-piece.p2 {
+  background: radial-gradient(circle, #2A697A, #123740);
+  border: 2px solid #FFF;
+}
+
+.shisima-piece.selected {
+  outline: 3px solid #C28B38;
+  transform: scale(1.2);
+}
+
+/* ========================================================
+   Detail & Documentation Pages
+   ======================================================== */
+.detail-hero {
+  background: var(--mirath-cream);
+  border: 1.5px solid var(--mirath-card-border);
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 24px;
+}
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.detail-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--mirath-terracotta-dark);
+  margin-bottom: 6px;
+}
+
+.detail-subtitle {
+  font-size: 1.05rem;
+  color: var(--mirath-muted-brown);
+  margin-bottom: 18px;
+}
+
+.doc-section {
+  background: var(--mirath-cream);
+  border: 1px solid var(--mirath-card-border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.doc-section-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--mirath-dark-brown);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rules-step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rule-step-card {
+  background: var(--mirath-surface);
+  border-radius: 12px;
+  padding: 16px;
+  border-right: 4px solid var(--mirath-terracotta);
+}
+
+.rule-step-card h4 {
+  font-weight: 800;
+  color: var(--mirath-dark-brown);
+  margin-bottom: 4px;
+}
+
+.claim-card {
+  background: rgba(31, 78, 91, 0.08);
+  border-radius: 12px;
+  padding: 14px;
+  border-right: 4px solid var(--mirath-lapis);
+  margin-bottom: 10px;
+}
+
+.source-item {
+  background: var(--mirath-surface);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+/* ========================================================
+   Forms (Suggest, Corrections)
+   ======================================================== */
+.form-container {
+  background: var(--mirath-cream);
+  border: 1.5px solid var(--mirath-card-border);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--mirath-card-border);
+  background: #FFF;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--mirath-dark-brown);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--mirath-terracotta);
+  box-shadow: 0 0 0 3px rgba(200, 90, 50, 0.15);
+}
+
+textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Snackbar */
+.snackbar {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  background: var(--mirath-dark-brown);
+  color: #FFF;
+  padding: 12px 22px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  z-index: 9999;
+  font-weight: 700;
+  font-size: 0.92rem;
+  transition: opacity 0.3s ease;
+}
+
+.snackbar.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Mobile Bottom Nav */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--mirath-cream);
+  border-top: 1px solid var(--mirath-card-border);
+  box-shadow: 0 -4px 12px var(--mirath-shadow);
+  z-index: 100;
+  height: 64px;
+}
+
+.mobile-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--mirath-muted-brown);
+  font-size: 0.75rem;
+  font-weight: 700;
+  gap: 2px;
+}
+
+.mobile-nav-item.active {
+  color: var(--mirath-terracotta);
+}
+
+.mobile-icon {
+  font-size: 1.25rem;
+}
+
+/* Footer */
+.mirath-footer {
+  background: #251912;
+  color: #D4C9BC;
+  padding: 30px 20px;
+  margin-top: auto;
+  border-top: 3px solid var(--mirath-terracotta);
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-about h3 {
+  color: var(--mirath-sandstone);
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+.footer-about p {
+  font-size: 0.85rem;
+  max-width: 600px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 10px;
+}
+
+.footer-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #FFF;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.footer-btn:hover {
+  background: var(--mirath-terracotta);
+}
+
+/* Responsive queries */
+@media (max-width: 768px) {
+  .main-nav {
+    display: none;
+  }
+  .mobile-bottom-nav {
+    display: flex;
+  }
+  .hero-banner {
+    padding: 24px 18px;
+  }
+  .hero-title {
+    font-size: 1.7rem;
+  }
+  .app-viewport {
+    padding: 16px 14px 90px;
+  }
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مخطط الأقاليم D3</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      font-family: 'Cairo', system-ui, sans-serif;
+      background: transparent;
+      color: #2B1E16;
+      direction: rtl;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 10px;
+    }
+    .chart-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    svg {
+      width: 100%;
+      height: auto;
+      max-height: 280px;
+      overflow: visible;
+    }
+    .slice {
+      cursor: pointer;
+      transition: filter 0.2s ease, transform 0.2s ease;
+    }
+    .slice:hover {
+      filter: brightness(1.15) drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+    }
+    .center-label-title {
+      font-size: 14px;
+      font-weight: 700;
+      fill: #705E53;
+      text-anchor: middle;
+    }
+    .center-label-value {
+      font-size: 26px;
+      font-weight: 900;
+      fill: #A8421E;
+      text-anchor: middle;
+    }
+    .center-label-sub {
+      font-size: 11px;
+      font-weight: 600;
+      fill: #1F4E5B;
+      text-anchor: middle;
+    }
+    .tooltip-box {
+      background: #2B1E16;
+      color: #FAF7F0;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      position: absolute;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      border: 1px solid #D4A373;
+      z-index: 10;
+      text-align: right;
+      max-width: 240px;
+    }
+    .legend-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #F4EFE6;
+      border: 1px solid #E2D7C5;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .legend-item:hover, .legend-item.active {
+      background: #EDE6DA;
+      transform: translateY(-2px);
+      border-color: #C85A32;
+    }
+    .legend-color-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+  </style>
+  <script src="d3.min.js"></script>
+</head>
+<body>
+  <div class="chart-wrapper">
+    <div id="chart-svg-container" style="width: 100%; display: flex; justify-content: center;"></div>
+    <div id="tooltip" class="tooltip-box"></div>
+    <div id="legend" class="legend-container"></div>
+  </div>
+
+  <script>
+    const data = [
+      {
+        id: "sub_saharan_africa",
+        name: "أفريقيا جنوب الصحراء",
+        count: 2,
+        games: ["أواري (غانا)", "شيسِيما (كينيا)"],
+        color: "#C85A32"
+      },
+      {
+        id: "middle_east",
+        name: "الشرق الأوسط وشمال أفريقيا",
+        count: 1,
+        games: ["لعبة أور الملكية (العراق)"],
+        color: "#1F4E5B"
+      },
+      {
+        id: "mediterranean",
+        name: "حوض البحر الأبيض المتوسط",
+        count: 1,
+        games: ["القِرْق الأندلسي (المغرب والأندلس)"],
+        color: "#C28B38"
+      },
+      {
+        id: "east_asia",
+        name: "شرق آسيا",
+        count: 1,
+        games: ["ألعاب التطويق والمحاصرة التراثية"],
+        color: "#5B6A45"
+      },
+      {
+        id: "scandinavia",
+        name: "شمال أوروبا والدول الإسكندنافية",
+        count: 1,
+        games: ["ألعاب التافيل الملكية غير المتناظرة"],
+        color: "#8B5A2B"
+      }
+    ];
+
+    const width = 320;
+    const height = 260;
+    const radius = Math.min(width, height) / 2 - 15;
+    const innerRadius = radius * 0.62;
+
+    const svg = d3.select("#chart-svg-container")
+      .append("svg")
+      .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("preserveAspectRatio", "xMidYMid meet")
+      .append("g")
+      .attr("transform", `translate(${width / 2}, ${height / 2})`);
+
+    const pie = d3.pie()
+      .value(d => d.count)
+      .sort(null)
+      .padAngle(0.04);
+
+    const arc = d3.arc()
+      .innerRadius(innerRadius)
+      .outerRadius(radius)
+      .cornerRadius(6);
+
+    const hoverArc = d3.arc()
+      .innerRadius(innerRadius - 4)
+      .outerRadius(radius + 8)
+      .cornerRadius(8);
+
+    const tooltip = d3.select("#tooltip");
+
+    // Center interactive label
+    const centerTitle = svg.append("text")
+      .attr("class", "center-label-title")
+      .attr("dy", "-16")
+      .text("إجمالي الألعاب");
+
+    const centerValue = svg.append("text")
+      .attr("class", "center-label-value")
+      .attr("dy", "12")
+      .text(d3.sum(data, d => d.count));
+
+    const centerSub = svg.append("text")
+      .attr("class", "center-label-sub")
+      .attr("dy", "30")
+      .text("5 أقاليم جغرافية");
+
+    // Slices
+    const path = svg.selectAll("path")
+      .data(pie(data))
+      .enter()
+      .append("path")
+      .attr("class", "slice")
+      .attr("fill", d => d.data.color)
+      .attr("d", arc)
+      .each(function(d) { this._current = d; })
+      .on("mouseover", function(event, d) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("d", hoverArc);
+
+        centerTitle.text(d.data.name);
+        centerValue.text(d.data.count + " ألعاب");
+        centerSub.text(d.data.games[0]);
+
+        tooltip
+          .style("opacity", 1)
+          .html(`<strong>${d.data.name}</strong><br>العدد: ${d.data.count}<br><small style="color: #FFD166;">${d.data.games.join("، ")}</small>`);
+
+        // Highlight legend
+        d3.selectAll(".legend-item").classed("active", l => l.id === d.data.id);
+      })
+      .on("mousemove", function(event) {
+        const bounds = document.querySelector(".chart-wrapper").getBoundingClientRect();
+        tooltip
+          .style("left", (event.clientX - bounds.left - 50) + "px")
+          .style("top", (event.clientY - bounds.top - 55) + "px");
+      })
+      .on("mouseout", function() {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("d", arc);
+
+        centerTitle.text("إجمالي الألعاب");
+        centerValue.text(d3.sum(data, d => d.count));
+        centerSub.text("5 أقاليم جغرافية");
+
+        tooltip.style("opacity", 0);
+        d3.selectAll(".legend-item").classed("active", false);
+      })
+      .on("click", function(event, d) {
+        // Trigger filter in parent if available
+        if (window.parent && window.parent.postMessage) {
+          window.parent.postMessage({ type: "SELECT_REGION", regionId: d.data.id, regionName: d.data.name }, "*");
+        }
+      });
+
+    // Smooth entry transition
+    path.transition()
+      .duration(900)
+      .attrTween("d", function(d) {
+        const i = d3.interpolate({ startAngle: 0, endAngle: 0 }, d);
+        return function(t) { return arc(i(t)); };
+      });
+
+    // Legend
+    const legend = d3.select("#legend");
+    data.forEach(d => {
+      const item = legend.append("div")
+        .attr("class", "legend-item")
+        .datum(d)
+        .on("mouseover", function() {
+          svg.selectAll(".slice")
+            .filter(s => s.data.id === d.id)
+            .dispatch("mouseover");
+        })
+        .on("mouseout", function() {
+          svg.selectAll(".slice")
+            .filter(s => s.data.id === d.id)
+            .dispatch("mouseout");
+        });
+
+      item.append("div")
+        .attr("class", "legend-color-dot")
+        .style("background", d.color);
+
+      item.append("span")
+        .text(`${d.name} (${d.count})`);
+    });
+  </script>
+</body>
+</html>

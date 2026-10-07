@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مِرث | ألعاب العالم المنسية - Mirath Web</title>
+  <meta name="description" content="منصة عربية لتوثيق، حفظ، وإحياء الألعاب التقليدية المنسية من حول العالم عبر تجارب رقمية تفاعلية وتراثية.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header / Top App Bar -->
+  <header class="mirath-header">
+    <div class="header-container">
+      <div class="brand-section">
+        <button id="btn-back" class="icon-btn hidden" aria-label="الرجوع" title="الرجوع">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <div class="logo-mark">مِ</div>
+        <div class="brand-text">
+          <h1 id="page-title">مِرث | Mirath</h1>
+          <p id="page-subtitle" class="subtitle">ألعاب العالم المنسية</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="btn-researcher-toggle" class="chip-toggle" title="تفعيل نمط التدقيق والتوثيق الأكاديمي">
+          <span class="icon">🔬</span>
+          <span class="label">نمط الباحث</span>
+        </button>
+        <button id="btn-admin-portal" class="icon-btn" title="بوابة الإدارة والمساهمات">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </button>
+        <button id="btn-theme-toggle" class="icon-btn" title="تبديل الوضع الليلي (المخطوطات القديمة)">
+          <span id="theme-icon">🌙</span>
+        </button>
+        <button id="btn-audio-toggle" class="icon-btn" title="تبديل المؤثرات الصوتية">
+          <span id="audio-icon">🔊</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Desktop & Tablet Navigation Bar -->
+    <nav class="main-nav">
+      <div class="nav-container">
+        <a href="#home" class="nav-link active" data-view="home">
+          <span class="nav-icon">🏛️</span>
+          <span>الرئيسية</span>
+        </a>
+        <a href="#catalog" class="nav-link" data-view="catalog">
+          <span class="nav-icon">🎲</span>
+          <span>كتالوج الألعاب</span>
+        </a>
+        <a href="#map" class="nav-link" data-view="map">
+          <span class="nav-icon">🌍</span>
+          <span>خريطة الأقاليم</span>
+        </a>
+        <a href="#glossary" class="nav-link" data-view="glossary">
+          <span class="nav-icon">📖</span>
+          <span>معجم المصطلحات</span>
+        </a>
+        <a href="#suggest" class="nav-link" data-view="suggest">
+          <span class="nav-icon">✍️</span>
+          <span>اقترح لعبة</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Notification Banner / Snackbar -->
+  <div id="snackbar" class="snackbar hidden"></div>
+
+  <!-- Main Content Container -->
+  <main id="app-viewport" class="app-viewport">
+    <!-- Views rendered dynamically via JavaScript -->
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav">
+    <a href="#home" class="mobile-nav-item active" data-view="home">
+      <span class="mobile-icon">🏛️</span>
+      <span>الرئيسية</span>
+    </a>
+    <a href="#catalog" class="mobile-nav-item" data-view="catalog">
+      <span class="mobile-icon">🎲</span>
+      <span>الألعاب</span>
+    </a>
+    <a href="#map" class="mobile-nav-item" data-view="map">
+      <span class="mobile-icon">🌍</span>
+      <span>الخريطة</span>
+    </a>
+    <a href="#glossary" class="mobile-nav-item" data-view="glossary">
+      <span class="mobile-icon">📖</span>
+      <span>المعجم</span>
+    </a>
+  </nav>
+
+  <!-- Footer -->
+  <footer class="mirath-footer">
+    <div class="footer-container">
+      <div class="footer-about">
+        <h3>مِرث | Forgotten Games of the World</h3>
+        <p>مشروع توثيقي حر مفتوح مكرس لاستعادة الألعاب الشعبية والتاريخية من مقابر التاريخ والمخطوطات النادرة وحفظها في واجهة تفاعلية خالية من التزييف.</p>
+      </div>
+      <div class="footer-links">
+        <button id="btn-export-json-footer" class="footer-btn">📥 تصدير الكتالوج بصيغة JSON</button>
+        <button id="btn-print-active-board" class="footer-btn">🖨️ طباعة اللوحات التراثية</button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="d3.min.js"></script>
+  <script src="data.js"></script>
+  <script src="engines.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

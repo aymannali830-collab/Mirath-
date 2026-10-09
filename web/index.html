@@ -1,119 +1,79 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مِرث | ألعاب العالم المنسية - Mirath Web</title>
-  <meta name="description" content="منصة عربية لتوثيق، حفظ، وإحياء الألعاب التقليدية المنسية من حول العالم عبر تجارب رقمية تفاعلية وتراثية.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <!-- Header / Top App Bar -->
-  <header class="mirath-header">
-    <div class="header-container">
-      <div class="brand-section">
-        <button id="btn-back" class="icon-btn hidden" aria-label="الرجوع" title="الرجوع">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-        </button>
-        <div class="logo-mark">مِ</div>
-        <div class="brand-text">
-          <h1 id="page-title">مِرث | Mirath</h1>
-          <p id="page-subtitle" class="subtitle">ألعاب العالم المنسية</p>
-        </div>
-      </div>
-
-      <div class="header-actions">
-        <button id="btn-researcher-toggle" class="chip-toggle" title="تفعيل نمط التدقيق والتوثيق الأكاديمي">
-          <span class="icon">🔬</span>
-          <span class="label">نمط الباحث</span>
-        </button>
-        <button id="btn-admin-portal" class="icon-btn" title="بوابة الإدارة والمساهمات">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </button>
-        <button id="btn-theme-toggle" class="icon-btn" title="تبديل الوضع الليلي (المخطوطات القديمة)">
-          <span id="theme-icon">🌙</span>
-        </button>
-        <button id="btn-audio-toggle" class="icon-btn" title="تبديل المؤثرات الصوتية">
-          <span id="audio-icon">🔊</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Desktop & Tablet Navigation Bar -->
-    <nav class="main-nav">
-      <div class="nav-container">
-        <a href="#home" class="nav-link active" data-view="home">
-          <span class="nav-icon">🏛️</span>
-          <span>الرئيسية</span>
-        </a>
-        <a href="#catalog" class="nav-link" data-view="catalog">
-          <span class="nav-icon">🎲</span>
-          <span>كتالوج الألعاب</span>
-        </a>
-        <a href="#map" class="nav-link" data-view="map">
-          <span class="nav-icon">🌍</span>
-          <span>خريطة الأقاليم</span>
-        </a>
-        <a href="#glossary" class="nav-link" data-view="glossary">
-          <span class="nav-icon">📖</span>
-          <span>معجم المصطلحات</span>
-        </a>
-        <a href="#suggest" class="nav-link" data-view="suggest">
-          <span class="nav-icon">✍️</span>
-          <span>اقترح لعبة</span>
-        </a>
-      </div>
-    </nav>
-  </header>
-
-  <!-- Notification Banner / Snackbar -->
-  <div id="snackbar" class="snackbar hidden"></div>
-
-  <!-- Main Content Container -->
-  <main id="app-viewport" class="app-viewport">
-    <!-- Views rendered dynamically via JavaScript -->
-  </main>
-
-  <!-- Mobile Bottom Navigation Bar -->
-  <nav class="mobile-bottom-nav">
-    <a href="#home" class="mobile-nav-item active" data-view="home">
-      <span class="mobile-icon">🏛️</span>
-      <span>الرئيسية</span>
-    </a>
-    <a href="#catalog" class="mobile-nav-item" data-view="catalog">
-      <span class="mobile-icon">🎲</span>
-      <span>الألعاب</span>
-    </a>
-    <a href="#map" class="mobile-nav-item" data-view="map">
-      <span class="mobile-icon">🌍</span>
-      <span>الخريطة</span>
-    </a>
-    <a href="#glossary" class="mobile-nav-item" data-view="glossary">
-      <span class="mobile-icon">📖</span>
-      <span>المعجم</span>
-    </a>
-  </nav>
-
-  <!-- Footer -->
-  <footer class="mirath-footer">
-    <div class="footer-container">
-      <div class="footer-about">
-        <h3>مِرث | Forgotten Games of the World</h3>
-        <p>مشروع توثيقي حر مفتوح مكرس لاستعادة الألعاب الشعبية والتاريخية من مقابر التاريخ والمخطوطات النادرة وحفظها في واجهة تفاعلية خالية من التزييف.</p>
-      </div>
-      <div class="footer-links">
-        <button id="btn-export-json-footer" class="footer-btn">📥 تصدير الكتالوج بصيغة JSON</button>
-        <button id="btn-print-active-board" class="footer-btn">🖨️ طباعة اللوحات التراثية</button>
-      </div>
-    </div>
-  </footer>
-
-  <script src="d3.min.js"></script>
-  <script src="data.js"></script>
-  <script src="engines.js"></script>
-  <script src="app.js"></script>
-</body>
-</html>
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مِرث — ألعاب التراث</title>
+<meta name="description" content="مِرث: توثيق الألعاب التراثية المنسية ولعبها دون إنترنت.">
+<meta name="theme-color" content="#1b1410">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg">
+<style>
+:root{--bg:#1b1410;--fg:#f1e6d2;--gold:#e2b45c;--line:#8a6b45}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:Amiri,Cairo,system-ui,serif;line-height:1.7}
+header,main{max-width:720px;margin:auto;padding:16px}
+h1{color:var(--gold);margin:0}a{color:var(--gold)}
+input[type=text]{width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:#2a1f17;color:var(--fg);font:inherit}
+.card{display:block;margin:10px 0;padding:12px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--fg)}
+.card small,.card em{display:block;opacity:.8}.card em{color:var(--gold)}
+dt{color:var(--gold)}dd{margin:0 0 8px}
+button{background:var(--gold);border:0;border-radius:8px;padding:6px 14px;font:inherit}
+svg{width:100%;max-width:320px;display:block;margin:auto}
+line{stroke:var(--line);stroke-width:2}
+.n{stroke:var(--line);stroke-width:2;cursor:pointer}
+.c0{fill:#3a2d22}.c1{fill:#e2b45c}.c2{fill:#7fb0c9}.sel{stroke:#fff;stroke-width:4}
+.tg{stroke:#fff;stroke-dasharray:4 3;stroke-width:3}.ow{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:12px 0}.pit{border-radius:50%;aspect-ratio:1;font-size:1.3rem;color:#1b1410}.p1{background:#e2b45c}.p2{background:#7fb0c9}.pit:disabled{opacity:.45}
+</style></head><body>
+<header><h1>مِرث</h1><div>ألعاب التراث التي تعمل دون إنترنت</div></header>
+<main id="app"></main>
+<script src="data.js"></script><script src="shisima.js"></script><script src="oware.js"></script>
+<script>
+var $=function(s){return document.querySelector(s)},app=$('#app'),G=CATALOG.games;
+function esc(t){return t==null?'غير متاح':String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function home(){
+ app.innerHTML='<input type=text id=q placeholder="ابحث في الكتالوج…"><div id=list></div>';
+ var q=$('#q');
+ function r(){var v=q.value.trim().toLowerCase();
+  $('#list').innerHTML=G.filter(function(g){return(g.title+g.titleEn+g.country+g.category).toLowerCase().indexOf(v)>-1}).map(function(g){
+   return'<a class=card href="#/g/'+g.id+'"><b>'+esc(g.title)+'</b><small>'+esc(g.country)+' · '+esc(g.category)+'</small><em>'+(g.playability.engine?'قابلة للعب':'قريباً')+'</em></a>'}).join('')}
+ q.oninput=r;r()}
+function game(id){
+ var g=G.filter(function(x){return x.id===id})[0];if(!g)return home();
+ app.innerHTML='<a href="#/">← الكتالوج</a><h2>'+esc(g.title)+'</h2><div dir=ltr>'+esc(g.titleEn)+'</div><dl>'+
+ [['البلد',g.country],['المنطقة',g.region],['النوع',g.category],['اللاعبون',g.players],['القواعد',g.rules],['التاريخ',g.history],['المصادر',g.sources.length?g.sources.join('، '):'لا توجد بعد'],['حالة المراجعة',g.review]].map(function(r){return'<dt>'+r[0]+'</dt><dd>'+esc(r[1])+'</dd>'}).join('')+
+ '</dl>'+(g.playability.engine?'<div id=play></div>':'<p>محرك اللعبة لم يُضف بعد.</p>');
+ if(g.playability.engine)PLAY[g.playability.engine]()}
+function playShisima(){
+ var S=Shisima,s=S.init(),sel=null,vsAi=true,el=$('#play');
+ function pt(i){if(i===8)return[150,150];var a=Math.PI*2*i/8-Math.PI/2+Math.PI/8;return[150+115*Math.cos(a),150+115*Math.sin(a)]}
+ function draw(){
+  var w=S.result(s),h='<label><input type=checkbox id=ai'+(vsAi?' checked':'')+'> ضد الحاسوب</label> <button id=rs>إعادة</button><p>'+(w?(w==='draw'?'تعادل':'فاز اللاعب '+w):'الدور: اللاعب '+s.t)+'</p><svg viewBox="0 0 300 300">',i,p,q,T=sel===null?[]:S.legal(s).filter(function(m){return m[0]===sel}).map(function(m){return m[1]});
+  for(i=0;i<8;i++){p=pt(i);q=pt((i+1)%8);h+='<line x1="'+p[0]+'" y1="'+p[1]+'" x2="'+q[0]+'" y2="'+q[1]+'"/><line x1="'+p[0]+'" y1="'+p[1]+'" x2="150" y2="150"/>'}
+  for(i=0;i<9;i++){p=pt(i);h+='<circle data-i="'+i+'" cx="'+p[0]+'" cy="'+p[1]+'" r="18" class="n c'+s.b[i]+(sel===i?' sel':'')+(T.indexOf(i)>-1?' tg':'')+'"/>'}
+  el.innerHTML=h+'</svg>';
+  Array.prototype.forEach.call(el.querySelectorAll('circle'),function(c){c.onclick=function(){click(+c.getAttribute('data-i'))}});
+  $('#rs').onclick=function(){s=S.init();sel=null;draw()};
+  $('#ai').onchange=function(){vsAi=this.checked;s=S.init();sel=null;draw()}}
+ function click(i){
+  if(S.result(s))return;
+  if(s.b[i]===s.t)sel=i;
+  else if(sel!==null){
+   var m=S.legal(s).filter(function(x){return x[0]===sel&&x[1]===i})[0];
+   if(m){s=S.apply(s,m);sel=null;draw();
+    if(vsAi&&s.t===2&&!S.result(s))setTimeout(function(){s=S.apply(s,S.ai(s,6));draw()},300);return}}
+  draw()}
+ draw()}
+function playOware(){
+ var O=Oware,s=O.init(),vsAi=true,el=$('#play');
+ function draw(){
+  var w=O.result(s),L=O.legal(s),h='<label><input type=checkbox id=ai'+(vsAi?' checked':'')+'> ضد الحاسوب</label> <button id=rs>إعادة</button><p>'+(w?(w==='draw'?'تعادل':'فاز اللاعب '+w):'الدور: اللاعب '+s.t)+' — النتيجة '+s.s[1]+' : '+s.s[2]+'</p><div class=ow dir=ltr>';
+  [11,10,9,8,7,6,0,1,2,3,4,5].forEach(function(i){h+='<button data-i="'+i+'" class="pit p'+(i<6?1:2)+'"'+(w||L.indexOf(i)<0||(vsAi&&s.t===2)?' disabled':'')+'>'+s.p[i]+'</button>'});
+  el.innerHTML=h+'</div>';
+  Array.prototype.forEach.call(el.querySelectorAll('.pit'),function(b){b.onclick=function(){s=O.apply(s,+b.getAttribute('data-i'));draw();aiTurn()}});
+  $('#rs').onclick=function(){s=O.init();draw()};
+  $('#ai').onchange=function(){vsAi=this.checked;s=O.init();draw()}}
+ function aiTurn(){if(vsAi&&s.t===2&&!O.result(s))setTimeout(function(){s=O.apply(s,O.ai(s,6));draw();aiTurn()},400)}
+ draw()}
+var PLAY={shisima:playShisima,oware:playOware};
+function route(){var m=location.hash.match(/^#\/g\/(\w+)/);m?game(m[1]):home()}
+addEventListener('hashchange',route);route();
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
+</script></body></html>

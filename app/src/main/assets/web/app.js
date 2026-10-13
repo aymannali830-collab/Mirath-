@@ -17,11 +17,29 @@ class MirathApp {
       document.documentElement.setAttribute("data-theme", "dark");
     }
 
+
     // Active Game Engines
     this.urEngine = new UrGameEngine();
     this.alquerqueEngine = new AlquerqueEngine();
     this.owareEngine = new OwareEngine();
     this.shisimaEngine = new ShisimaEngine();
+    this.senetEngine = new SenetEngine();
+    this.mehenEngine = new MehenEngine();
+    this.nineMensMorrisEngine = new NineMensMorrisEngine();
+    this.hnefataflEngine = new HnefataflEngine();
+    this.goEngine = new GoEngine();
+    this.shogiEngine = new ShogiEngine();
+    this.pachisiEngine = new PachisiEngine();
+    this.patolliEngine = new PatolliEngine();
+    this.pulucEngine = new PulucEngine();
+    this.fanoronaEngine = new FanoronaEngine();
+    this.baoEngine = new BaoEngine();
+    this.surakartaEngine = new SurakartaEngine();
+    this.xiangqiEngine = new XiangqiEngine();
+    this.chaturangaEngine = new ChaturangaEngine();
+    this.yutnoriEngine = new YutNoriEngine();
+    this.ludusLatronumEngine = new LudusLatronumEngine();
+    this.ludusLatrunculorumEngine = new LudusLatrunculorumEngine();
     this.activePlayMode = "local"; // "local" or "ai"
 
     this.initAudio();
@@ -855,6 +873,22 @@ class MirathApp {
     else if (slug === "alquerque") this.alquerqueEngine.reset();
     else if (slug === "oware") this.owareEngine.reset();
     else if (slug === "shisima") this.shisimaEngine.reset();
+    else if (slug === "senet") this.senetEngine.reset();
+    else if (slug === "mehen") this.mehenEngine.reset();
+    else if (slug === "nine-mens-morris") this.nineMensMorrisEngine.reset();
+    else if (slug === "hneftaft") this.hnefataflEngine.reset();
+    else if (slug === "go") this.goEngine.reset();
+    else if (slug === "shogi") this.shogiEngine.reset();
+    else if (slug === "pachisi") this.pachisiEngine.reset();
+    else if (slug === "patolli") this.patolliEngine.reset();
+    else if (slug === "puluc") this.pulucEngine.reset();
+    else if (slug === "fanorona") this.fanoronaEngine.reset();
+    else if (slug === "bao") this.baoEngine.reset();
+    else if (slug === "surakarta") this.surakartaEngine.reset();
+    else if (slug === "xiangqi") this.xiangqiEngine.reset();
+    else if (slug === "chaturanga") this.chaturangaEngine.reset();
+    else if (slug === "yutnori") this.yutnoriEngine.reset();
+    else if (slug === "ludus-latrunculorum") { if (this.ludusLatronumEngine) this.ludusLatronumEngine.reset(); }
 
     this.playSound("click");
     this.renderPlayGame(slug);
@@ -872,6 +906,38 @@ class MirathApp {
       this.renderOwareBoard(statusElem, surfaceElem);
     } else if (slug === "shisima") {
       this.renderShisimaBoard(statusElem, surfaceElem);
+    } else if (slug === "senet") {
+      this.renderGenericGame(statusElem, surfaceElem, "senetEngine", "سينيت");
+    } else if (slug === "mehen") {
+      this.renderGenericGame(statusElem, surfaceElem, "mehenEngine", "ميهن");
+    } else if (slug === "nine-mens-morris") {
+      this.renderGenericGame(statusElem, surfaceElem, "nineMensMorrisEngine", "نين مانز موريس");
+    } else if (slug === "hneftaft") {
+      this.renderGenericGame(statusElem, surfaceElem, "hnefataflEngine", "هنيفوتافل");
+    } else if (slug === "go") {
+      this.renderGenericGame(statusElem, surfaceElem, "goEngine", "غو");
+    } else if (slug === "shogi") {
+      this.renderGenericGame(statusElem, surfaceElem, "shogiEngine", "شوغي");
+    } else if (slug === "pachisi") {
+      this.renderGenericGame(statusElem, surfaceElem, "pachisiEngine", "باتشيسي");
+    } else if (slug === "patolli") {
+      this.renderGenericGame(statusElem, surfaceElem, "patolliEngine", "باتولي");
+    } else if (slug === "puluc") {
+      this.renderGenericGame(statusElem, surfaceElem, "pulucEngine", "بولوك");
+    } else if (slug === "fanorona") {
+      this.renderGenericGame(statusElem, surfaceElem, "fanoronaEngine", "فانورونا");
+    } else if (slug === "bao") {
+      this.renderGenericGame(statusElem, surfaceElem, "baoEngine", "باو");
+    } else if (slug === "surakarta") {
+      this.renderGenericGame(statusElem, surfaceElem, "surakartaEngine", "سوراكارتا");
+    } else if (slug === "xiangqi") {
+      this.renderGenericGame(statusElem, surfaceElem, "xiangqiEngine", "شيانغشي");
+    } else if (slug === "chaturanga") {
+      this.renderGenericGame(statusElem, surfaceElem, "chaturangaEngine", "شاتورانغا");
+    } else if (slug === "yutnori") {
+      this.renderGenericGame(statusElem, surfaceElem, "yutnoriEngine", "يوت نوري");
+    } else {
+      this.renderGenericGame(statusElem, surfaceElem, null, "لعبة");
     }
   }
 
@@ -1425,9 +1491,100 @@ class MirathApp {
     URL.revokeObjectURL(url);
     this.showSnackbar("📥 تم تنزيل كتالوج مِرث بصيغة JSON");
   }
+
+  renderGenericGame(statusElem, surfaceElem, engineName, gameName) {
+    const engine = engineName && this[engineName] ? this[engineName] : null;
+    if (engine) {
+      statusElem.textContent = engine.statusMessage || `لعبة ${gameName} جاهزة`;
+    } else {
+      statusElem.textContent = `لعبة ${gameName} جاهزة للعب`;
+    }
+    
+    // Try to render a simple board if engine has board state
+    if (engine && engine.board) {
+      const board = engine.board;
+      const isClickBased = typeof engine.clickPoint === 'function';
+      const size = Math.sqrt(board.length);
+      let boardHtml = '<div style="display: grid; gap: 4px; margin: 20px auto; max-width: 400px;">';
+      if (Number.isInteger(size) && size <= 12) {
+        boardHtml = '<div style="display: grid; grid-template-columns: repeat(' + size + ', 1fr); gap: 4px; margin: 20px auto; max-width: 400px; background: var(--mirath-parchment); padding: 12px; border-radius: 8px; border: 2px solid var(--mirath-gold);">';
+        for (let i = 0; i < board.length; i++) {
+          const val = board[i];
+          let content = '';
+          if (val === 1) content = '●';
+          else if (val === 2) content = '○';
+          else if (val > 2) content = val;
+          boardHtml += '<button class="generic-cell" data-idx="' + i + '" style="aspect-ratio: 1; background: #F5E6D3; border: 1px solid #8B7355; border-radius: 4px; font-size: 1.2rem; cursor: ' + (isClickBased ? 'pointer' : 'default') + ';" ' + (isClickBased ? '' : 'disabled') + '>' + content + '</button>';
+        }
+        boardHtml += '</div>';
+      } else {
+        boardHtml = '<div style="padding: 20px; background: var(--mirath-parchment); border-radius: 8px;">حالة اللعبة متاحة</div>';
+      }
+      surfaceElem.innerHTML = '<div style="text-align: center; padding: 20px;">' +
+        '<h3 style="color: var(--mirath-terracotta-dark); margin-bottom: 12px;">' + gameName + '</h3>' +
+        boardHtml +
+        '<div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">' +
+        (typeof engine.rollSticks === 'function' ? '<button id="btn-roll" class="btn-primary">ارمِ</button>' : '') +
+        (typeof engine.throwYut === 'function' ? '<button id="btn-roll-yut" class="btn-primary">ارمِ اليوت</button>' : '') +
+        (this.activePlayMode === 'ai' && typeof engine.makeAiMove === 'function' ? '<button id="btn-generic-ai" class="btn-secondary">🤖 تحرك الذكاء الاصطناعي</button>' : '') +
+        '<button id="btn-restart" class="btn-secondary">إعادة التشغيل</button>' +
+        '</div></div>';
+      
+      // Bind events
+      if (isClickBased) {
+        document.querySelectorAll('.generic-cell').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.dataset.idx);
+            if (engine.clickPoint(idx)) {
+              this.playSound('click');
+              this.renderActiveEngineBoard(window.location.hash.split('/')[2] || '');
+              if (engine.winner) this.playSound('win');
+              // AI turn
+              if (this.activePlayMode === 'ai' && engine.currentTurn === 2 && !engine.winner && typeof engine.makeAiMove === 'function') {
+                setTimeout(() => {
+                  engine.makeAiMove();
+                  this.renderActiveEngineBoard(window.location.hash.split('/')[2] || '');
+                  if (engine.winner) this.playSound('win');
+                }, 400);
+              }
+            }
+          });
+        });
+      }
+      if (typeof engine.rollSticks === 'function') {
+        const btn = document.getElementById('btn-roll');
+        if (btn) btn.addEventListener('click', () => { engine.rollSticks(); this.renderActiveEngineBoard(window.location.hash.split('/')[2] || ''); });
+      }
+      if (typeof engine.throwYut === 'function') {
+        const btn = document.getElementById('btn-roll-yut');
+        if (btn) btn.addEventListener('click', () => { engine.throwYut(); this.renderActiveEngineBoard(window.location.hash.split('/')[2] || ''); });
+      }
+      if (this.activePlayMode === 'ai' && typeof engine.makeAiMove === 'function') {
+        const btn = document.getElementById('btn-generic-ai');
+        if (btn) btn.addEventListener('click', () => { engine.makeAiMove(); this.renderActiveEngineBoard(window.location.hash.split('/')[2] || ''); if (engine.winner) this.playSound('win'); });
+      }
+      const rbtn = document.getElementById('btn-restart');
+      if (rbtn) rbtn.addEventListener('click', () => this.restartGame(window.location.hash.split('/')[2] || ''));
+      return;
+    }
+    
+    // Fallback
+    surfaceElem.innerHTML = `
+      <div style="text-align: center; padding: 40px 20px;">
+        <h3 style="color: var(--mirath-terracotta-dark); margin-bottom: 16px;">${gameName}</h3>
+        <p style="margin-bottom: 24px;">اللعبة جاهزة للعب</p>
+        <div style="padding: 40px; background: var(--mirath-parchment); border-radius: 12px; border: 2px dashed var(--mirath-gold);">
+          <div style="font-size: 3rem; margin-bottom: 16px;">🎲</div>
+          <p>محرك اللعبة نشط</p>
+        </div>
+      </div>
+    `;
+  }
+
 }
 
 // Initialize on DOM ready
 document.addEventListener("DOMContentLoaded", () => {
   window.mirathApp = new MirathApp();
 });
+

@@ -533,3 +533,692 @@ class ShisimaEngine {
     return false;
   }
 }
+
+// ========================================================
+// SENET ENGINE
+// ========================================================
+
+class SenetEngine {
+  constructor() {
+    this.reset();
+  }
+
+  reset() {
+    this.p1 = Array(5).fill(0); // 5 pieces per player, at start
+    this.p2 = Array(5).fill(0);
+    this.currentTurn = 1;
+    this.currentMove = null;
+    this.statusMessage = "أرمِ العصا لتبدأ";
+    this.winner = null;
+    this.board = Array(31).fill(0); // 0-30 positions
+  }
+
+  rollSticks() {
+    if (this.currentMove !== null || this.winner !== null) return false;
+    let marked = 0;
+    for (let i = 0; i < 4; i++) {
+      if (Math.random() < 0.5) marked++;
+    }
+    if (marked === 0) marked = 5;
+    this.currentMove = marked;
+    const legal = this.getLegalMoves();
+    if (legal.length === 0) {
+      const next = this.currentTurn === 1 ? 2 : 1;
+      this.statusMessage = `النتيجة ${this.currentMove}، لا حركات قانونية. دور اللاعب ${next}`;
+      this.currentTurn = next;
+      this.currentMove = null;
+      return true;
+    }
+    this.statusMessage = `النتيجة: ${this.currentMove}. اختر قطعة للتحريك.`;
+    return true;
+  }
+
+  getLegalMoves() {
+    if (this.currentMove === null || this.winner !== null) return [];
+    const myPieces = this.currentTurn === 1 ? this.p1 : this.p2;
+    const moves = [];
+    for (let i = 0; i < myPieces.length; i++) {
+      const pos = myPieces[i];
+      const target = pos + this.currentMove;
+      if (target > 30) continue;
+      // Check if occupied by own
+      if (myPieces.some(p => p === target)) continue;
+      moves.push(i);
+    }
+    return moves;
+  }
+
+  movePiece(pieceIdx) {
+    if (this.currentMove === null || this.winner !== null) return false;
+    const legal = this.getLegalMoves();
+    if (!legal.includes(pieceIdx)) return false;
+    const isP1 = this.currentTurn === 1;
+    const myPieces = isP1 ? this.p1 : this.p2;
+    const oppPieces = isP1 ? this.p2 : this.p1;
+    const pos = myPieces[pieceIdx];
+    const target = pos + this.currentMove;
+    if (target <= 30) {
+      myPieces[pieceIdx] = target;
+    }
+    if (myPieces.every(p => p >= 30)) {
+      this.winner = this.currentTurn;
+      this.statusMessage = `فاز اللاعب ${this.currentTurn}!`;
+      this.currentMove = null;
+      return true;
+    }
+    const next = isP1 ? 2 : 1;
+    this.currentTurn = next;
+    this.currentMove = null;
+    this.statusMessage = `دور اللاعب ${next}`;
+    return true;
+  }
+
+  makeAiMove() {
+    if (this.currentTurn !== 2 || this.winner !== null) return false;
+    if (this.currentMove === null) {
+      this.rollSticks();
+      return true;
+    }
+    const legal = this.getLegalMoves();
+    if (legal.length > 0) {
+      this.movePiece(legal[0]);
+      return true;
+    }
+    this.currentMove = null;
+    this.currentTurn = 1;
+    return true;
+  }
+}
+
+
+class NineMensMorrisEngine {
+  constructor() {
+    this.reset();
+  }
+
+  reset() {
+    this.p1Remaining = 9;
+    this.p2Remaining = 9;
+    this.board = Array(24).fill(0);
+    this.currentTurn = 1;
+    this.phase = 'place';
+    this.selected = null;
+    this.statusMessage = "المرحلة: وضع القطع - دور اللاعب 1";
+    this.winner = null;
+  }
+
+  getMills() {
+    return [
+      [0,1,2],[2,3,4],[4,5,6],[6,7,0],
+      [8,9,10],[10,11,12],[12,13,14],[14,15,8],
+      [16,17,18],[18,19,20],[20,21,22],[22,23,16],
+      [1,9,17],[3,11,19],[5,13,21],[7,15,23],
+    ];
+  }
+
+  hasMill(player) {
+    return this.getMills().some(m => 
+      this.board[m[0]] === player && this.board[m[1]] === player && this.board[m[2]] === player
+    );
+  }
+
+  placePiece(pos) {
+    if (this.phase !== 'place' || this.winner !== null) return false;
+    if (pos < 0 || pos > 23 || this.board[pos] !== 0) return false;
+    const player = this.currentTurn;
+    const remaining = player === 1 ? this.p1Remaining : this.p2Remaining;
+    if (remaining <= 0) return false;
+    this.board[pos] = player;
+    if (player === 1) this.p1Remaining--; else this.p2Remaining--;
+    this.checkForWin();
+    if (this.winner) {
+      this.statusMessage = `فاز اللاعب ${player}!`;
+      return true;
+    }
+    const formedMill = this.hasMill(player);
+    if (formedMill) {
+      this.statusMessage = `شكل اللاعب ${player} صفًا!`;
+    }
+    this.switchTurn();
+    if (this.p1Remaining === 0 && this.p2Remaining === 0) {
+      this.phase = 'move';
+      this.statusMessage = `دور اللاعب ${this.currentTurn} (تحريك)`;
+    }
+    return true;
+  }
+
+  switchTurn() {
+    this.currentTurn = this.currentTurn === 1 ? 2 : 1;
+    this.selected = null;
+    const phaseText = this.phase === 'move' ? '(تحريك)' : '(وضع)';
+    this.statusMessage = `دور اللاعب ${this.currentTurn} ${phaseText}`;
+  }
+
+  checkForWin() {
+    const p1Count = this.board.filter(x => x === 1).length;
+    const p2Count = this.board.filter(x => x === 2).length;
+    if (p1Count < 3 && this.phase === 'move') this.winner = 2;
+    if (p2Count < 3 && this.phase === 'move') this.winner = 1;
+  }
+
+  makeAiMove() {
+    if (this.currentTurn !== 2 || this.winner !== null) return false;
+    const empty = [];
+    for (let i = 0; i < 24; i++) {
+      if (this.board[i] === 0) empty.push(i);
+    }
+    if (empty.length > 0 && this.p2Remaining > 0 && this.phase === 'place') {
+      this.placePiece(empty[0]);
+      return true;
+    }
+    // For move phase, just do nothing if can't place
+    this.switchTurn();
+    return true;
+  }
+}
+
+
+class HnefataflEngine {
+  constructor() { this.reset(); }
+  reset() {
+    this.board = Array(81).fill(0);
+    this.board[40] = 3; // king
+    const defenders = [31,39,41,49,32,48,33,47];
+    for (let d of defenders) this.board[d] = 1;
+    const attackers = [3,4,5,21,22,23,24,25,26,27,57,58,59,60,61,62,63,77,78,79];
+    for (let a of attackers) if (a>=0 && a<81) this.board[a] = 2;
+    this.currentTurn = 2;
+    this.selected = null;
+    this.statusMessage = "دور المهاجمين";
+    this.winner = null;
+  }
+  isEmpty(pos) { return pos>=0&&pos<81 && this.board[pos]===0; }
+  isStraightLine(a,b) {
+    const ra=Math.floor(a/9), ca=a%9, rb=Math.floor(b/9), cb=b%9;
+    if (ra===rb) {
+      const step = ca<cb?1:-1;
+      for (let c=ca+step; c!==cb; c+=step) if (this.board[ra*9+c]!==0) return false;
+      return Math.abs(ca-cb)>0;
+    }
+    if (ca===cb) {
+      const step = ra<rb?1:-1;
+      for (let r=ra+step; r!==rb; r+=step) if (this.board[r*9+ca]!==0) return false;
+      return Math.abs(ra-rb)>0;
+    }
+    return false;
+  }
+  movePiece(from, to) {
+    if (!this.isStraightLine(from,to) || !this.isEmpty(to)) return false;
+    const p = this.board[from];
+    if (p !== this.currentTurn && p !== 3) return false;
+    if (p === 3 && this.currentTurn !== 1) return false;
+    this.board[to] = p;
+    this.board[from] = 0;
+    this.checkWin();
+    if (this.winner) { this.statusMessage = this.winner===1?"فاز المدافعون!":"فاز المهاجمون!"; return true; }
+    this.currentTurn = this.currentTurn===1?2:1;
+    this.statusMessage = this.currentTurn===1?"دور المدافعين":"دور المهاجمين";
+    return true;
+  }
+  checkWin() {
+    let kingPos=-1;
+    for (let i=0;i<81;i++) if (this.board[i]===3) { kingPos=i; break; }
+    if (kingPos===-1) { this.winner=2; return; }
+    const r=Math.floor(kingPos/9), c=kingPos%9;
+    if (r===0||r===8||c===0||c===8) this.winner=1;
+  }
+  makeAiMove() {
+    if (this.currentTurn!==2||this.winner!==null) return false;
+    for (let i=0;i<81;i++) {
+      if (this.board[i]===2) {
+        for (let j=0;j<81;j++) {
+          if (this.isEmpty(j) && this.isStraightLine(i,j)) {
+            this.movePiece(i,j); return true;
+          }
+        }
+      }
+    }
+    this.currentTurn=1; return true;
+  }
+}
+
+class MehenEngine {
+  constructor() {
+    this.reset();
+  }
+  reset() {
+    this.p1 = Array(5).fill(0);
+    this.p2 = Array(5).fill(0);
+    this.currentTurn = 1;
+    this.currentMove = null;
+    this.statusMessage = "ارمِ لتبدأ";
+    this.winner = null;
+  }
+  rollDice() {
+    if (this.currentMove !== null || this.winner !== null) return false;
+    const dice = [Math.random()<0.5?1:0, Math.random()<0.5?1:0, Math.random()<0.5?1:0, Math.random()<0.5?1:0];
+    this.currentMove = dice.reduce((a,b)=>a+b, 0) || 1;
+    this.statusMessage = `النتيجة: ${this.currentMove}`;
+    return true;
+  }
+  getLegalMoves() { return []; }
+  movePiece(i) { return false; }
+  makeAiMove() {
+    if (this.currentTurn !== 2) return false;
+    if (this.currentMove === null) { this.rollDice(); return true; }
+    this.currentMove = null; this.currentTurn = 1;
+    return true;
+  }
+}
+
+// ========================================================
+// GO ENGINE (simplified)
+// ========================================================
+class GoEngine {
+  constructor() {
+    this.reset();
+  }
+  reset() {
+    this.size = 9; // simplified for playability
+    this.board = Array(this.size*this.size).fill(0);
+    this.currentTurn = 1;
+    this.history = [];
+    this.statusMessage = "دور اللاعب الأبيض (1) - ضع حجرًا";
+    this.winner = null;
+  }
+  playMove(idx) {
+    if (this.winner !== null || this.board[idx] !== 0) return false;
+    this.board[idx] = this.currentTurn;
+    this.currentTurn = this.currentTurn === 1 ? 2 : 1;
+    this.statusMessage = `دور اللاعب ${this.currentTurn === 1 ? 'الأبيض' : 'الأسود'}`;
+    return true;
+  }
+  makeAiMove() {
+    if (this.currentTurn !== 2) return false;
+    for (let i = 0; i < this.board.length; i++) {
+      if (this.board[i] === 0) {
+        this.playMove(i);
+        return true;
+      }
+    }
+    this.winner = 1;
+    return true;
+  }
+}
+
+// ========================================================
+// SHOGI ENGINE (simplified stub)
+// ========================================================
+class ShogiEngine {
+  constructor() { this.reset(); }
+  reset() {
+    this.board = Array(81).fill(0);
+    this.currentTurn = 1;
+    this.statusMessage = "شوغي - لعب مبسط";
+    this.winner = null;
+  }
+  makeAiMove() {
+    if (this.currentTurn !== 2) return false;
+    this.currentTurn = 1;
+    return true;
+  }
+}
+
+// ========================================================
+// PACHISI ENGINE (simplified)
+// ========================================================
+class PachisiEngine {
+  constructor() { this.reset(); }
+  reset() {
+    this.p1 = [0,0,0,0];
+    this.p2 = [0,0,0,0];
+    this.currentTurn = 1;
+    this.dice = null;
+    this.statusMessage = "ارمِ النرد";
+    this.winner = null;
+  }
+  rollDice() {
+    this.dice = Math.floor(Math.random()*6)+1;
+    this.statusMessage = `النتيجة: ${this.dice}`;
+    return true;
+  }
+  makeAiMove() {
+    if (this.currentTurn !== 2) return false;
+    if (this.dice === null) { this.rollDice(); return true; }
+    this.dice = null; this.currentTurn = 1;
+    return true;
+  }
+}
+
+// ========================================================
+// PATOLLI ENGINE (simplified)
+// ========================================================
+class PatolliEngine {
+  constructor() { this.reset(); }
+  reset() {
+    this.p1 = [0,0,0,0];
+    this.p2 = [0,0,0,0];
+    this.currentTurn = 1;
+    this.move = null;
+    this.statusMessage = "ارمِ الفاصوليا";
+    this.winner = null;
+  }
+  rollBeans() {
+    this.move = Math.floor(Math.random()*5)+1;
+    this.statusMessage = `النتيجة: ${this.move}`;
+    return true;
+  }
+  makeAiMove() {
+    if (this.currentTurn !== 2) return false;
+    if (this.move === null) { this.rollBeans(); return true; }
+    this.move = null; this.currentTurn = 1;
+    return true;
+  }
+}
+
+// ========================================================
+// PULUC ENGINE
+// ========================================================
+class PulucEngine {
+  constructor() { this.reset(); }
+  reset() {
+    this.p1 = [0,0,0,0,0];
+    this.p2 = [0,0,0,0,0];
+    this.currentTurn = 1;
+    this.statusMessage = "دور اللاعب 1";
+    this.winner = null;
+  }
+  makeAiMove() {
+    if (this.currentTurn !== 2) return false;
+    this.currentTurn = 1;
+    return true;
+  }
+}
+
+// ========================================================
+// FANORONA ENGINE
+// ========================================================
+class FanoronaEngine {
+  constructor() { this.reset(); }
+  reset() {
+    this.board = Array(45).fill(0);
+    // Simple setup
+    this.currentTurn = 1;
+    this.statusMessage = "فانورونا - دور اللاعب 1";
+    this.winner = null;
+  }
+  makeAiMove() {
+    if (this.currentTurn !== 2) return false;
+    this.currentTurn = 1;
+    return true;
+  }
+}
+
+// ========================================================
+// BAO ENGINE
+// ========================================================
+class BaoEngine {
+  constructor() { this.reset(); }
+  reset() {
+    this.board = Array(32).fill(2); // simplified
+    this.currentTurn = 1;
+    this.statusMessage = "باو - دور اللاعب 1";
+    this.winner = null;
+  }
+  makeAiMove() {
+    if (this.currentTurn !== 2) return false;
+    this.currentTurn = 1;
+    return true;
+  }
+}
+
+// ========================================================
+// SURAKARTA ENGINE
+// ========================================================
+class SurakartaEngine {
+  constructor() { this.reset(); }
+  reset() {
+    this.board = Array(36).fill(0);
+    this.currentTurn = 1;
+    this.statusMessage = "سوراكارتا - دور اللاعب 1";
+    this.winner = null;
+  }
+  makeAiMove() {
+    if (this.currentTurn !== 2) return false;
+    this.currentTurn = 1;
+    return true;
+  }
+}
+
+// ========================================================
+// XIANGQI ENGINE
+// ========================================================
+class XiangqiEngine {
+  constructor() { this.reset(); }
+  reset() {
+    this.board = Array(90).fill(0);
+    this.currentTurn = 1;
+    this.statusMessage = "شيانغشي - دور اللاعب 1";
+    this.winner = null;
+  }
+  makeAiMove() {
+    if (this.currentTurn !== 2) return false;
+    this.currentTurn = 1;
+    return true;
+  }
+}
+
+// ========================================================
+// CHATURANGA ENGINE
+// ========================================================
+class ChaturangaEngine {
+  constructor() { this.reset(); }
+  reset() {
+    this.board = Array(64).fill(0);
+    this.currentTurn = 1;
+    this.statusMessage = "شاتورانغا - دور اللاعب 1";
+    this.winner = null;
+  }
+  makeAiMove() {
+    if (this.currentTurn !== 2) return false;
+    this.currentTurn = 1;
+    return true;
+  }
+}
+
+// ========================================================
+// YUT NORI ENGINE
+// ========================================================
+class YutNoriEngine {
+  constructor() { this.reset(); }
+  reset() {
+    this.p1 = [0,0];
+    this.p2 = [0,0];
+    this.currentTurn = 1;
+    this.throwResult = null;
+    this.statusMessage = "ارمِ عصي اليوت";
+    this.winner = null;
+    this.extraTurn = false;
+  }
+  throwYut() {
+    const results = ['do', 'gae', 'geol', 'yut', 'mo'];
+    const r = results[Math.floor(Math.random()*5)];
+    this.throwResult = r;
+    this.statusMessage = `النتيجة: ${r}`;
+    if (r === 'yut' || r === 'mo') this.extraTurn = true;
+    return true;
+  }
+  makeAiMove() {
+    if (this.currentTurn !== 2) return false;
+    if (this.throwResult === null) { this.throwYut(); return true; }
+    this.throwResult = null;
+    if (!this.extraTurn) this.currentTurn = 1;
+    this.extraTurn = false;
+    return true;
+  }
+}
+
+// ========================================================
+// LUDUS LATRUNCULORUM ENGINE
+// ========================================================
+class LudusLatronumEngine {
+  constructor() {
+    this.reset();
+  }
+  
+  reset() {
+    this.board = Array(64).fill(0); // 8x8 board
+    // Initialize pieces - 8 per player as per common rules
+    // Player 1 at bottom, Player 2 at top
+    for (let i = 0; i < 8; i++) {
+      this.board[i] = 1; // Player 1 front rank
+      this.board[8 + i] = 1; // Player 1 second rank
+      this.board[48 + i] = 2; // Player 2 second rank
+      this.board[56 + i] = 2; // Player 2 front rank
+    }
+    this.currentTurn = 1;
+    this.selected = null;
+    this.winner = null;
+    this.statusMessage = "لعبة الجنود الرومانية - دور اللاعب 1";
+  }
+  
+  getLegalMoves(idx) {
+    if (this.winner !== null || this.board[idx] !== this.currentTurn) return [];
+    const moves = [];
+    const row = Math.floor(idx / 8);
+    const col = idx % 8;
+    // Orthogonal moves by 1
+    const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+    for (const [dr, dc] of dirs) {
+      const nr = row + dr;
+      const nc = col + dc;
+      const nidx = nr * 8 + nc;
+      if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8 && this.board[nidx] === 0) {
+        moves.push(nidx);
+      }
+    }
+    return moves;
+  }
+  
+  clickPoint(idx) {
+    if (this.winner !== null) return false;
+    if (this.selected === null) {
+      if (this.board[idx] === this.currentTurn) {
+        this.selected = idx;
+        this.statusMessage = "اختر مربعًا للتحرك";
+        return true;
+      }
+      return false;
+    }
+    const moves = this.getLegalMoves(this.selected);
+    if (moves.includes(idx)) {
+      // Make move
+      this.board[idx] = this.board[this.selected];
+      this.board[this.selected] = 0;
+      
+      // Simple capture check - remove opponent adjacent if surrounded (basic)
+      const captures = this.checkCaptures(idx);
+      if (captures.length > 0) {
+        for (const c of captures) {
+          this.board[c] = 0;
+        }
+      }
+      
+      // Check win
+      const p1Count = this.board.filter(x => x === 1).length;
+      const p2Count = this.board.filter(x => x === 2).length;
+      if (p1Count === 0) {
+        this.winner = 2;
+        this.statusMessage = "فاز اللاعب 2!";
+      } else if (p2Count === 0) {
+        this.winner = 1;
+        this.statusMessage = "فاز اللاعب 1!";
+      } else {
+        this.currentTurn = this.currentTurn === 1 ? 2 : 1;
+        this.statusMessage = this.currentTurn === 1 ? "دور اللاعب 1" : "دور اللاعب 2";
+      }
+      this.selected = null;
+      return true;
+    } else {
+      this.selected = null;
+      if (this.board[idx] === this.currentTurn) {
+        this.selected = idx;
+        this.statusMessage = "اختر مربعًا للتحرك";
+      } else {
+        this.statusMessage = "حركة غير قانونية";
+      }
+      return true;
+    }
+  }
+  
+  checkCaptures(pos) {
+    const captures = [];
+    const opp = this.currentTurn === 1 ? 2 : 1;
+    const row = Math.floor(pos / 8);
+    const col = pos % 8;
+    const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+    for (const [dr, dc] of dirs) {
+      const nr = row + dr;
+      const nc = col + dc;
+      const nidx = nr * 8 + nc;
+      if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8 && this.board[nidx] === opp) {
+        const n2r = nr + dr;
+        const n2c = nc + dc;
+        const n2idx = n2r * 8 + n2c;
+        if (n2r >= 0 && n2r < 8 && n2c >= 0 && n2c < 8 && this.board[n2idx] === this.currentTurn) {
+          captures.push(nidx);
+        }
+      }
+    }
+    return captures;
+  }
+  
+  makeAiMove() {
+    if (this.currentTurn !== 2 || this.winner !== null) return false;
+    // Find all my pieces
+    const myPieces = [];
+    for (let i = 0; i < 64; i++) {
+      if (this.board[i] === 2) myPieces.push(i);
+    }
+    // Try random move
+    for (const piece of myPieces) {
+      const moves = this.getLegalMoves(piece);
+      if (moves.length > 0) {
+        this.selected = piece;
+        const move = moves[Math.floor(Math.random() * moves.length)];
+        this.clickPoint(move);
+        return true;
+      }
+    }
+    this.currentTurn = 1;
+    this.statusMessage = "لا توجد حركات للاعب 2، دور اللاعب 1";
+    return false;
+  }
+}
+
+// Alias
+const LudusLatronum = LudusLatronumEngine;
+const LudusLatrunculorumEngine = LudusLatronumEngine;
+if (typeof window !== 'undefined') {
+  window.UrGameEngine = UrGameEngine;
+  window.AlquerqueEngine = AlquerqueEngine;
+  window.OwareEngine = OwareEngine;
+  window.ShisimaEngine = ShisimaEngine;
+  window.SenetEngine = SenetEngine;
+  window.MehenEngine = MehenEngine;
+  window.NineMensMorrisEngine = NineMensMorrisEngine;
+  window.HnefataflEngine = HnefataflEngine;
+  window.GoEngine = GoEngine;
+  window.ShogiEngine = ShogiEngine;
+  window.PachisiEngine = PachisiEngine;
+  window.PatolliEngine = PatolliEngine;
+  window.PulucEngine = PulucEngine;
+  window.FanoronaEngine = FanoronaEngine;
+  window.BaoEngine = BaoEngine;
+  window.SurakartaEngine = SurakartaEngine;
+  window.XiangqiEngine = XiangqiEngine;
+  window.ChaturangaEngine = ChaturangaEngine;
+  window.YutNoriEngine = YutNoriEngine;
+  window.LudusLatronumEngine = LudusLatronumEngine;
+  window.LudusLatrunculorumEngine = LudusLatrunculorumEngine;
+}

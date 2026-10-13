@@ -19,3 +19,7 @@ assert.deepStrictEqual(O.legal({p:[0,0,0,0,1,2,0,0,0,0,0,0],s:[0,0,0],t:1,n:0}),
 assert.strictEqual(O.result({p:[3,0,0,0,0,0,0,0,0,0,0,0],s:[0,0,0],t:1,n:0}),1);
 let h=O.init();while(!O.result(h)){const m=O.ai(h,2);assert(O.legal(h).includes(m));h=O.apply(h,m);assert.strictEqual(sm(h),48)}
 console.log('ok');
+const L=require('./ludus_latrunculorum.js');
+const l=L.init();
+assert.strictEqual(l.b.length,64);
+console.log('ludus ok');
